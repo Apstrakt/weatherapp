@@ -4,11 +4,12 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { useState } from 'react';
-import { fetchWeatherData } from './Utilities.js';
+import { fetchWeatherData, getAddressLocation } from './Utilities.js';
 import Weather from './Weather.js';
+import NewLocation from './NewLocation.js'
 
 function App() {
-  const [cities,] = useState([
+  const [cities, setCities] = useState([
     {
       name: 'Tallinn',
       lat: 59.437,
@@ -17,34 +18,57 @@ function App() {
     },
     {
       name: 'Pärnu',
-      lat: 58.391,
-      long: 24.4953,
+      
       weatherData: null
     },
     {
       name: 'Tartu',
-      lat: 58.3780,
-      long: 26.7290,
+      
       weatherData: null
     },
      {
       name: 'Sidney',
-      lat: 33.8688,
-      long: 151.2093,
+      
       weatherData: null
     },
   ]);
 
+
+  const addLocation = (location) => {
+    setCities([
+      ...cities,
+      {
+        name: location,
+        weatherData: null,
+      }
+    ])
+    setIsAddingActive(false)
+  }
   const [activeCity, setActiveCity] = useState(null);
   const [weather, setWeather] = useState(null);
+  const [isAddingActive, setIsAddingActive] = useState(true)
 
   const rowClicked = async (index) => {
     const city = cities[index];
+    setIsAddingActive(false)
     setActiveCity(city.name);
-    const dataObj = await fetchWeatherData({ lat: city.lat, long: city.long });
+    const locationData = await getAddressLocation(city.name);
+    console.log(locationData)
+    const dataObj = await fetchWeatherData({
+      lat: locationData.lat,
+      long: locationData.lng,
+    });
     setWeather(dataObj);
-  };
+    
+  }
 
+  let rightPaneJsx = (
+    <>
+      <Weather weather={weather} city={activeCity} />
+    </>)
+  if (isAddingActive) {
+    rightPaneJsx = <NewLocation addLocation={addLocation} />
+  }
   return (
     <Container>
       <Row >
@@ -56,12 +80,18 @@ function App() {
               {city.name}
             </div>
           ))}
+            <button
+              className='btn btn-link'
+              onClick={()=>setIsAddingActive(true)}
+            >
+              Add Location
+            </button>
             </div>
         </Col>
         <Col lg="8" className="rightPan">
           <h3 className="rightPanCW">Current weather in</h3>
           <h2 className="rightPanCity">{activeCity}</h2>
-          <Weather weather={weather} city={activeCity} />
+          {rightPaneJsx}
         </Col>
       </Row>
     </Container>

@@ -11,7 +11,7 @@ function Weather({ weather, city }) {
 
   let backgroundStyle = 'defaultStyle';
 
-     if (weather.current_weather.temperature > 20) {
+     if (weather.current.temperature_2m > 20) {
     backgroundStyle = 'beach';
      } else {
          backgroundStyle = 'noBeach';
@@ -27,7 +27,7 @@ function Weather({ weather, city }) {
           <div>Temperature:</div>
         </Col>
         <Col>
-          <div>{weather.current_weather.temperature}</div>
+          <div>{weather.current.temperature_2m}</div>
         </Col>
       </Row>
       <Row >
@@ -35,7 +35,7 @@ function Weather({ weather, city }) {
           <div>Wind speed:</div>
         </Col>
         <Col>
-          <div>{weather.current_weather.windspeed}</div>
+          <div>{weather.current.wind_speed_10m}</div>
         </Col>
           </Row>
         <Row >
@@ -43,15 +43,15 @@ function Weather({ weather, city }) {
           <div>Precipitation:</div>
         </Col>
         <Col>
-          <div>{weather.current_weather.precipitation} {weather.current_weather.showers} {weather.current_weather.rain}</div>
+          <div>{weather.current.precipitation}</div>
         </Col>
      </Row>
     <Row >
         <Col>
-          <div>Precipitation Probability:</div>
+          <div>Showers:</div>
         </Col>
         <Col>
-            <div>{weather.current_weather.precipitation_probability}</div>
+           <div>{weather.current.precipitation.showers}</div>
         </Col>
           </Row>
           </div>

@@ -8,7 +8,7 @@ import { fetchWeatherData } from './Utilities.js';
 import Weather from './Weather.js';
 
 function App() {
-  const [cities, setCities] = useState([
+  const [cities,] = useState([
     {
       name: 'Tallinn',
       lat: 59.437,

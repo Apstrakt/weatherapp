@@ -9,6 +9,17 @@ function Weather({ weather, city }) {
     return <h3 className="clickOnCity">Click on city</h3>;
   }
 
+  if (weather.error) {
+    return (
+      <>
+        <h3>Oops! Something went wrong.</h3>
+         {weather.error}
+        <p>Try again later</p>
+      </>
+      )
+    
+  }
+
   let backgroundStyle = 'defaultStyle';
 
      if (weather.current.temperature_2m > 20) {

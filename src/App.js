@@ -69,7 +69,7 @@ function App() {
     const city = cities[index];
     setIsAddingActive(false)
     setActiveCity(city.name);
-    //loadLocationData(index)
+    
     setActiveLocation(index)
   }
 

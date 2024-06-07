@@ -73,9 +73,9 @@ function App() {
     setActiveLocation(index)
   }
 
-  useEffect(() => {
-    loadLocationData(activeLocation)
-  }, [activeLocation])
+  //useEffect(() => {
+  //loadLocationData(activeLocation)
+  //}, [activeLocation])
 
   let rightPaneJsx = (
     <>

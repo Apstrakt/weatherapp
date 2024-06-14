@@ -72,6 +72,10 @@ function App() {
     setActiveLocation(index);
   };
 
+  useEffect(() => {
+    loadLocationData(activeLocation);
+  }, [activeLocation]);
+
   let rightPaneJsx = (
     <>
       <Weather weather={weather} city={activeCity} />

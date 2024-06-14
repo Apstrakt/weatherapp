@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { fetchWeatherData, getAddressLocation } from "./Utilities.js";
 import Weather from "./Weather.js";
 import NewLocation from "./NewLocation.js";
@@ -18,17 +18,14 @@ function App() {
     },
     {
       name: "Pärnu",
-
       weatherData: null,
     },
     {
       name: "Tartu",
-
       weatherData: null,
     },
     {
       name: "Sidney",
-
       weatherData: null,
     },
   ]);
@@ -42,48 +39,54 @@ function App() {
       },
     ]);
     setIsAddingActive(false);
-    setActiveLocation(cities.length - 1);
+    setActiveLocation(cities.length); // Changed to cities.length
   };
+
   const [activeCity, setActiveCity] = useState(null);
   const [weather, setWeather] = useState(null);
   const [isAddingActive, setIsAddingActive] = useState(true);
   const [activeLocation, setActiveLocation] = useState(0);
-  const loadLocationData = async (index) => {
-    const city = cities[index];
-    try {
-      const locationData = await getAddressLocation(city.name);
-      console.log(locationData);
-      const dataObj = await fetchWeatherData({
-        lat: locationData.lat,
-        long: locationData.lng,
-      });
-      setWeather(dataObj);
-    } catch (error) {
-      console.log(error.message);
-      setWeather({ error: error.message });
-    }
-  };
+
+  const loadLocationData = useCallback(
+    async (index) => {
+      const city = cities[index];
+      try {
+        const locationData = await getAddressLocation(city.name);
+        console.log(locationData);
+        const dataObj = await fetchWeatherData({
+          lat: locationData.lat,
+          long: locationData.lng,
+        });
+        setWeather(dataObj);
+      } catch (error) {
+        console.log(error.message);
+        setWeather({ error: error.message });
+      }
+    },
+    [cities]
+  );
 
   const rowClicked = async (index) => {
     const city = cities[index];
     setIsAddingActive(false);
     setActiveCity(city.name);
-
     setActiveLocation(index);
   };
 
   useEffect(() => {
     loadLocationData(activeLocation);
-  }, [activeLocation]);
+  }, [activeLocation, loadLocationData]);
 
   let rightPaneJsx = (
     <>
       <Weather weather={weather} city={activeCity} />
     </>
   );
+
   if (isAddingActive) {
     rightPaneJsx = <NewLocation addLocation={addLocation} />;
   }
+
   return (
     <Container>
       <Row>
